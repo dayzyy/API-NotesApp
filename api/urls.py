@@ -1,6 +1,6 @@
 from aiohttp import web
-from views import signup
+from views import register
 
 urls = [
-    web.post('/signup', signup)
+    web.post('/register', register)
 ]

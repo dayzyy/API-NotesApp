@@ -1,5 +1,4 @@
 import json
-from serializers import UserSerializer
 
 USER_INSTANCES_PATH = './data/users.json'
 USER_COUNT_PATH = './data/user_id_counter.txt'
@@ -17,20 +16,45 @@ class UserManager:
                 file.write('0')
 
     @classmethod
-    def all(cls):
-        with open(USER_INSTANCES_PATH, 'r') as file:
-            data = json.load(file)['users']
-            users = UserSerializer(data)
-            print()
-
-    @classmethod
     def create(cls, username, password):
-        pass
+        with open(USER_COUNT_PATH, 'r') as file:
+            id = int(file.read())
+
+        with open(USER_INSTANCES_PATH, 'r') as file:
+            data = json.load(file)
+            data['users'].append({"id": id, "username": username, "password": password})
+
+            with open(USER_INSTANCES_PATH, 'w') as file:
+                json.dump(data, file)
+
+        with open(USER_COUNT_PATH, 'w') as file:
+            file.write(f'{id + 1}')
+    
+    @classmethod
+    def DoesNotExist(cls, username):
+        with open(USER_INSTANCES_PATH, 'r') as file:
+            users = json.load(file)['users']
+
+        for user in users:
+            if username == user['username']:
+                return False
+        return True, ''
+    
+    # Checks if provided credentials (username and password) are valid (suitable for usage)
+    @classmethod
+    def validate(cls, username, password):
+        if len(username) < 5:
+            return False, 'Username must be at least 5 characters long'
+
+        if len(password) < 5:
+            return False, 'Password must be at least 5 characters long'
+
+        return True, ''
 
 class User:
-    def __init__(self, id, email, password):
+    def __init__(self, id, username, password):
         self.id =  id
-        self.username = email
+        self.username = username
         self.password = password
 
     objects =  UserManager
