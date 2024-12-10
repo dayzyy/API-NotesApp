@@ -1,9 +1,10 @@
 from aiohttp import web
-
 from user.models import User
 
 async def register(request):
     data = await request.json()
+
+    print(data)
     
     if not User.objects.DoesNotExist(data['username']):
         return web.json_response(text=f'user with username ({data['username']}) already exists!', status=409)
