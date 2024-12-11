@@ -1,12 +1,12 @@
 import json
 
-USER_INSTANCES_PATH = './api/data/users.json'
-USER_COUNT_PATH = './api/data/user_id_counter.txt'
+USER_INSTANCES_PATH = './data/users.json'
+USER_COUNT_PATH = './data/user_id_counter.txt'
 
 class UserManager:
     @classmethod
     def load_database(cls):
-        print('Loading up the database')
+        print('Loading up users...')
 
         try:
             open(USER_INSTANCES_PATH, 'r')

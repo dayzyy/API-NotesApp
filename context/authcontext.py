@@ -46,3 +46,6 @@ def login(username, password):
         print(data['token'])
 
         save_token(data['token'])
+
+def logout():
+    save_token('')
