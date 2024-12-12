@@ -1,4 +1,8 @@
 from aiohttp import web
+from urllib import parse
+import base64
+import json
+
 from user.models import User
 from tokens.models import Token, IsAuthenticated
 
@@ -39,6 +43,17 @@ async def is_authenticated(request):
     token = request.headers.get("Authorization")
 
     if IsAuthenticated(token):
-        return web.json_response(text='Permission granted!', status=200)
+        encoded_payload, _ = token.split('.')
+
+        encoded_payload = parse.unquote(encoded_payload)
+        payload = base64.urlsafe_b64decode(encoded_payload).decode()
+        json_payload = json.loads(payload)
+
+        data = {
+            "text": 'Permission granted!',
+            "username": json_payload['username'],
+        }
+
+        return web.json_response(data, status=200)
     else:
         return web.json_response(text='Permission denied!', status=401)

@@ -1,10 +1,10 @@
 import argparse
 
-from context.authcontext import register, login, logout, load_storage, saved_token 
+from context.authcontext import register, login, logout, status, load_storage
 
 load_storage()
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description='Authentication')
 
 subparser = parser.add_subparsers(dest='command', help='available commands')
 
@@ -17,6 +17,9 @@ login_parser.add_argument('username', help='your username')
 login_parser.add_argument('password', help='your password')
 
 logout_parser = subparser.add_parser('logout')
+
+status_parser = subparser.add_parser('status', help='see your authorization status')
+
 
 args = parser.parse_args()
 
@@ -32,3 +35,7 @@ match args.command:
     case 'logout':
         print(f'Logging out...')
         logout()
+
+    case 'status':
+        print(f'Authorization status...')
+        status()

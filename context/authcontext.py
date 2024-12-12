@@ -49,3 +49,20 @@ def login(username, password):
 
 def logout():
     save_token('')
+
+def status():
+    token = saved_token()
+
+    headers = {
+        'Authorization': token,
+    }
+
+    response = requests.get(f'{URL}/status', headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+
+        print(f'Logged in as [{data['username']}]')
+
+    elif response.status_code == 401:
+        print('Unauthorized')
