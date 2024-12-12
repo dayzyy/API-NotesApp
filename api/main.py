@@ -9,5 +9,10 @@ app.add_routes(urls)
 if __name__ == '__main__':
     User.objects.load_database()
     Note.objects.load_database()
-    Note.objects.create('dayzyy', 'first note')
+
+    print('\nAvailable endpoints: [', end='\n\n')
+    for route in urls:
+        print(f'    {route.path}')
+    print('\n] ola :p', end='\n\n')
+
     web.run_app(app)

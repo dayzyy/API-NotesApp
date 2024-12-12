@@ -1,8 +1,7 @@
-from aiohttp import web
-from views import is_authenticated, register, login
+from user.urls import urls as user_urls
+from note.urls import urls as note_urls
 
 urls = [
-    web.post('/register', register),
-    web.post('/login', login),
-    web.get('/status', is_authenticated),
+    *user_urls,
+    *note_urls,
 ]

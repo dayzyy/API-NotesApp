@@ -1,6 +1,6 @@
 import requests
 
-URL = 'http://localhost:8080'
+URL = 'http://localhost:8080/users'
 SAVED_TOKEN_PATH = './context/token.txt'
 
 def load_storage():
