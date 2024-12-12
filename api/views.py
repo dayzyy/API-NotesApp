@@ -1,6 +1,6 @@
 from aiohttp import web
 from user.models import User
-from tokens.models import Token
+from tokens.models import Token, IsAuthenticated
 
 async def register(request):
     data = await request.json()
@@ -34,3 +34,11 @@ async def login(request):
             return web.json_response(data, status=200)
 
     return web.json_response(text='Wrong credentials!', status=401)
+
+async def is_authenticated(request):
+    token = request.headers.get("Authorization")
+
+    if IsAuthenticated(token):
+        return web.json_response(text='Permission granted!', status=200)
+    else:
+        return web.json_response(text='Permission denied!', status=401)

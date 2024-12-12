@@ -40,7 +40,10 @@ class Token:
         return token
 
 def IsAuthenticated(token):
-    encoded_payload, encoded_signiture = token.split('.')
+    try:
+        encoded_payload, encoded_signiture = token.split('.')
+    except ValueError:
+        return False
 
     encoded_payload = parse.unquote(encoded_payload)
     payload = base64.urlsafe_b64decode(encoded_payload).decode()

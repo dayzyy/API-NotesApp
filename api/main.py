@@ -9,4 +9,5 @@ app.add_routes(urls)
 if __name__ == '__main__':
     User.objects.load_database()
     Note.objects.load_database()
+    Note.objects.create('dayzyy', 'first note')
     web.run_app(app)

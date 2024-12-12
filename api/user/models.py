@@ -50,7 +50,7 @@ class UserManager:
         for user in users:
             if username == user.username:
                 return False
-        return True, ''
+        return True
     
     # Checks if provided credentials (username and password) are valid (suitable for usage)
     @classmethod
