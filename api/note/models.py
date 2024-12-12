@@ -54,6 +54,29 @@ class NoteManager:
         with open(NOTE_COUNT_PATH, 'w') as  file:
             file.write(f'{int(id) + 1}')
 
+    @classmethod
+    def all(cls):
+        with open(NOTE_INSTANCES_PATH, 'r') as file:
+            return json.load(file)['notes']
+
+    @classmethod
+    def filter(cls, username, status=None):
+        notes = cls.all()
+        demanded_notes = []
+    
+        if status is None:
+            for note in notes:
+                if note['username'] == username:
+                    demanded_notes.append(note)
+
+            return demanded_notes
+
+        for note in notes:
+            if note['status'] == status:
+                demanded_notes.append(note)
+
+        return demanded_notes
+
 class Note:
     def __init__(self, id, body, created_at, status):
         self.id = id

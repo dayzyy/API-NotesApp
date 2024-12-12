@@ -4,20 +4,29 @@ import base64
 
 from tokens.models import IsAuthenticated
 from note.models import Note
+from user.models import User
 
-async def add(request):
-    data = await request.json()
-    token = request.headers.get('Authorization')
-
+def authenticate(token):
     if not IsAuthenticated(token):
-        return web.json_response(status=401)
+        return None
 
     encoded_payload, _ = token.split('.')
 
     payload = base64.urlsafe_b64decode(encoded_payload).decode()
     json_payload = json.loads(payload)
+    
+    return User.objects.get(json_payload['username'])
 
-    Note.objects.create(json_payload['username'], data['body'])
+async def add(request):
+    data = await request.json()
+    token = request.headers.get('Authorization')
+
+    user = authenticate(token)
+    
+    if user is None:
+        return web.json_response(status=401)
+
+    Note.objects.create(user.username, data['body'])
 
     if len(data['body']) <= 25:
         note_preview = data['body']
@@ -25,3 +34,19 @@ async def add(request):
         note_preview = f'{data['body'][:25]}...'
 
     return web.json_response(text=f'Note succesfully created: "{note_preview}"', status=200)
+
+async def get_notes(request):
+    token = request.headers.get('Authorization')
+
+    user = authenticate(token)
+
+    if user is None:
+        return web.json_response(status=401)
+
+    data = await request.json()
+
+    notes = Note.objects.filter(username=user.username, status=data['filter'])
+
+    data = json.dumps(notes)
+
+    return web.json_response(data, status=200)

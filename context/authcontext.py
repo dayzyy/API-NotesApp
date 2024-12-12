@@ -43,7 +43,6 @@ def login(username, password):
         data = response.json()
 
         print(response.status_code, data['text'])
-        print(data['token'])
 
         save_token(data['token'])
 

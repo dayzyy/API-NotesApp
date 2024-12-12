@@ -42,6 +42,16 @@ class UserManager:
 
         with open('./data/user_id_counter.txt', 'w') as file:
             file.write(f'{id + 1}')
+
+    @classmethod
+    def get(cls, username):
+        users = cls.all()
+
+        for user in users:
+            if user.username == username:
+                return user
+        
+        return None
     
     @classmethod
     def DoesNotExist(cls, username):
