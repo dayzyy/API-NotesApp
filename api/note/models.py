@@ -77,6 +77,33 @@ class NoteManager:
 
         return demanded_notes
 
+    @classmethod
+    def remove(cls, username, id):
+        notes = cls.filter(username=username)
+
+        note_to_remove = notes[0]
+
+        for note in notes:
+            if int(note['id']) == id:
+                note_to_remove = note
+        
+        notes = cls.all()
+        notes.remove(note_to_remove)
+
+        with open(NOTE_INSTANCES_PATH,  'w') as file:
+            json.dump({"notes": notes}, file)
+
+    @classmethod
+    def DoesNotExist(cls, username, id):
+        notes = cls.filter(username=username)
+
+        for note in notes:
+            if int(note['id']) == id:
+                return False
+
+        return True
+
+
 class Note:
     def __init__(self, id, body, created_at, status):
         self.id = id

@@ -22,7 +22,6 @@ async def add(request):
     token = request.headers.get('Authorization')
 
     user = authenticate(token)
-    
     if user is None:
         return web.json_response(status=401)
 
@@ -39,7 +38,6 @@ async def get_notes(request):
     token = request.headers.get('Authorization')
 
     user = authenticate(token)
-
     if user is None:
         return web.json_response(status=401)
 
@@ -50,3 +48,18 @@ async def get_notes(request):
     data = json.dumps(notes)
 
     return web.json_response(data, status=200)
+
+async def remove(request):
+    token = request.headers.get('Authorization')
+
+    user = authenticate(token)
+    if user is None:
+        return web.json_response(status=401)
+
+    data = await request.json()
+
+    if Note.objects.DoesNotExist(user.username, int(data['id'])):
+        return web.json_response(status=404)
+
+    Note.objects.remove(user.username, data['id'])
+    return web.json_response(status=200)
