@@ -63,3 +63,22 @@ async def remove(request):
 
     Note.objects.remove(user.username, data['id'])
     return web.json_response(status=200)
+
+async def update(request):
+    token = request.headers.get('Authorization')
+
+    user = authenticate(token)
+    if user is None:
+        return web.json_response(status=401)
+
+    data = await request.json()
+
+    if Note.objects.DoesNotExist(user.username, int(data['id'])):
+        return web.json_response(status=404)
+
+    if data.get('body'):
+        Note.objects.update(user.username, int(data['id']), body=data['body'])
+    elif data.get('status'):
+        Note.objects.update(user.username, int(data['id']), status=data['status'])
+
+    return web.json_response(status=200)

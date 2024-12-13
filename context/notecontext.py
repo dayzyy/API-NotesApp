@@ -56,5 +56,30 @@ def delete(id):
         print('Unauthorized! Log in to modify notes')
     elif response.status_code == 404:
         print(f'Note with id: [{id}] doesnt not exist (or is not yours)')
-    elif response.status_code == 2000:
+    elif response.status_code == 200:
         print(f'Note successfuly deleted!')
+
+def update(id, body=None, status=None):
+    headers = {
+        'Authorization': saved_token()
+    }
+
+    if body is not None:
+        data = {
+            'id': id,
+            'body': body
+        }
+    else:
+        data = {
+            'id': id,
+            'status': status
+        }
+
+    response = requests.post(f'{URL}/update', headers=headers, json=data)
+
+    if response.status_code == 401:
+        print('Unauthorized! Log in to modify notes')
+    elif response.status_code == 404:
+        print(f'Note with id: [{id}] doesnt not exist (or is not yours)')
+    elif response.status_code == 200:
+        print(f'Note successfuly updated!')

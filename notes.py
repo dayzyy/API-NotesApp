@@ -1,6 +1,6 @@
 import argparse
 
-from context.notecontext import add, get_notes, delete
+from context.notecontext import add, get_notes, delete, update
 
 parser = argparse.ArgumentParser(description='Manage your notes')
 
@@ -15,6 +15,14 @@ list_parser.add_argument('--filter', '-f', choices=['todo', 'in-progress', 'done
 delete_parser = subparser.add_parser('delete', help='delete a note')
 delete_parser.add_argument('id', type=int, help='id of the note to delete')
 
+update_parser = subparser.add_parser('update', help='update a note')
+update_parser.add_argument('id', type=int, help='id of the note to update')
+update_parser.add_argument('body', help='updated note')
+
+mark_parser = subparser.add_parser('mark')
+mark_parser.add_argument('id', type=int, help='id of the note to update')
+mark_parser.add_argument('status', choices=['todo', 'in-progress', 'done'], help='updated note')
+
 args = parser.parse_args()
 
 match args.command:
@@ -26,3 +34,9 @@ match args.command:
 
     case 'delete':
         delete(args.id)
+
+    case 'update':
+        update(args.id, body=args.body)
+
+    case 'mark':
+        update(args.id, status=args.status)

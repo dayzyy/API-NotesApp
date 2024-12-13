@@ -72,7 +72,7 @@ class NoteManager:
             return demanded_notes
 
         for note in notes:
-            if note['status'] == status:
+            if note['status'] == status and note['username'] == username:
                 demanded_notes.append(note)
 
         return demanded_notes
@@ -92,6 +92,35 @@ class NoteManager:
 
         with open(NOTE_INSTANCES_PATH,  'w') as file:
             json.dump({"notes": notes}, file)
+
+    @classmethod
+    def update(cls, username, id, body=None, status=None):
+        notes = cls.filter(username=username)
+        
+        updated_note = None
+        if body is not None:
+            for note in notes:
+                if int(note['id']) == int(id):
+                    note['body'] = body
+                    updated_note = note
+
+        if status is not None:
+            for note in notes:
+                if int(note['id']) == int(id):
+                    note['status'] = status
+                    updated_note = note
+
+        if updated_note is None:
+            raise ValueError('Note does not exist')
+
+        all_notes = cls.all()
+
+        for index, note in enumerate(all_notes):
+            if note['id'] == updated_note['id']:
+                all_notes[index] = updated_note
+
+        with open(NOTE_INSTANCES_PATH, 'w') as file:
+            json.dump({"notes": all_notes}, file)
 
     @classmethod
     def DoesNotExist(cls, username, id):
